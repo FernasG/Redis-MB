@@ -1,0 +1,27 @@
+networks:
+  redis-network:
+    name: redis-network
+    driver: bridge
+
+services:
+  app-consumer:
+    build: .
+    container_name: app-consumer
+    image: app-consumer:latest
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ${PWD}:/app
+    networks:
+      - redis-network
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      - redis-network
